@@ -16,6 +16,12 @@ client.once(Events.ClientReady, () => {
 client.on(Events.MessageCreate, message => {
     if (message.author.bot) return;
     
+    const targetChannelId = process.env.TARGET_CHANNEL_ID;
+    
+    if (targetChannelId && message.channel.id !== targetChannelId) {
+        return;
+    }
+    
     console.log(`📢 频道: ${message.channel.name} | 用户: ${message.author.username} | 消息: ${message.content}`);
     
     if (message.content === '!ping') {
