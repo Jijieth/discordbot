@@ -8,6 +8,7 @@ A simple Discord bot that monitors and logs chat messages from specific channels
 - **User Monitoring**: Track messages from specific users by ID or username
 - **Message Logging**: Console output with timestamps, user info, and message content
 - **Attachment Detection**: Logs file attachments and images
+- **DM Notifications**: Send private message alerts when monitored users post
 - **Basic Commands**: Includes a simple ping-pong command for testing
 
 ## Setup
@@ -37,6 +38,7 @@ A simple Discord bot that monitors and logs chat messages from specific channels
    TARGET_CHANNEL_ID=channel_id_to_monitor
    TARGET_USER_ID=user_id_to_monitor
    TARGET_USERNAME=username_to_monitor
+   NOTIFY_USER_ID=your_user_id_for_notifications
    ```
 
 ### Getting Discord IDs
@@ -58,6 +60,7 @@ A simple Discord bot that monitors and logs chat messages from specific channels
 | `TARGET_CHANNEL_ID` | Specific channel to monitor | No |
 | `TARGET_USER_ID` | Specific user ID to monitor | No |
 | `TARGET_USERNAME` | Specific username to monitor (case-insensitive) | No |
+| `NOTIFY_USER_ID` | Your user ID to receive DM notifications | No |
 
 ### Monitoring Modes
 
@@ -97,6 +100,19 @@ The bot logs messages in the following format:
 ```
 [2024-01-15 14:30:25] 📢 Channel: general | User: username (ID: 123456789) | Message: Hello world!
 📎 Attachments: https://cdn.discordapp.com/attachments/...
+```
+
+### DM Notification Format
+
+When `NOTIFY_USER_ID` is configured, you'll receive private messages like:
+```
+🚨 **监控通知**
+⏰ 时间: 2024-01-15 14:30:25
+📢 频道: general
+👤 用户: username (123456789)
+💬 消息: Hello world!
+📎 附件: https://cdn.discordapp.com/attachments/...
+🔗 跳转: https://discord.com/channels/guild_id/channel_id/message_id
 ```
 
 ## Creating a Discord Bot
