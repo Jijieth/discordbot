@@ -13,27 +13,27 @@ async function sendNotification(userId, message, timestamp) {
     try {
         const user = await client.users.fetch(userId);
         
-        let notificationMessage = `🚨 **监控通知**\n`;
-        notificationMessage += `⏰ 时间: ${timestamp}\n`;
-        notificationMessage += `📢 频道: ${message.channel.name}\n`;
-        notificationMessage += `👤 用户: ${message.author.username} (${message.author.id})\n`;
-        notificationMessage += `💬 消息: ${message.content}\n`;
+        let notificationMessage = `🚨 **Monitor Alert**\n`;
+        notificationMessage += `⏰ Time: ${timestamp}\n`;
+        notificationMessage += `📢 Channel: ${message.channel.name}\n`;
+        notificationMessage += `👤 User: ${message.author.username} (${message.author.id})\n`;
+        notificationMessage += `💬 Message: ${message.content}\n`;
         
         if (message.attachments.size > 0) {
-            notificationMessage += `📎 附件: ${Array.from(message.attachments.values()).map(att => att.url).join(', ')}\n`;
+            notificationMessage += `📎 Attachments: ${Array.from(message.attachments.values()).map(att => att.url).join(', ')}\n`;
         }
         
-        notificationMessage += `🔗 跳转: https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
+        notificationMessage += `🔗 Jump to message: https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
         
         await user.send(notificationMessage);
-        console.log(`✅ 已发送通知给用户 ${user.username}`);
+        console.log(`✅ Notification sent to user ${user.username}`);
     } catch (error) {
-        console.error(`❌ 发送通知失败:`, error.message);
+        console.error(`❌ Failed to send notification:`, error.message);
     }
 }
 
 client.once(Events.ClientReady, () => {
-    console.log(`✅ Discord机器人已启动！登录为 ${client.user.tag}`);
+    console.log(`✅ Discord bot started! Logged in as ${client.user.tag}`);
 });
 
 client.on(Events.MessageCreate, message => {
@@ -62,11 +62,11 @@ client.on(Events.MessageCreate, message => {
     }
     
     if (shouldLog) {
-        const timestamp = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
-        console.log(`[${timestamp}] 📢 频道: ${message.channel.name} | 用户: ${message.author.username} (ID: ${message.author.id}) | 消息: ${message.content}`);
+        const timestamp = new Date().toLocaleString('en-US', { timeZone: 'UTC' });
+        console.log(`[${timestamp}] 📢 Channel: ${message.channel.name} | User: ${message.author.username} (ID: ${message.author.id}) | Message: ${message.content}`);
         
         if (message.attachments.size > 0) {
-            console.log(`📎 附件: ${Array.from(message.attachments.values()).map(att => att.url).join(', ')}`);
+            console.log(`📎 Attachments: ${Array.from(message.attachments.values()).map(att => att.url).join(', ')}`);
         }
         
         // Send DM notification if configured
@@ -82,11 +82,11 @@ client.on(Events.MessageCreate, message => {
 });
 
 client.on(Events.Error, error => {
-    console.error('Discord客户端出错:', error);
+    console.error('Discord client error:', error);
 });
 
 process.on('unhandledRejection', error => {
-    console.error('未处理的Promise拒绝:', error);
+    console.error('Unhandled promise rejection:', error);
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
