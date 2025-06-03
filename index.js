@@ -9,6 +9,29 @@ const client = new Client({
     ]
 });
 
+async function sendNotification(userId, message, timestamp) {
+    try {
+        const user = await client.users.fetch(userId);
+        
+        let notificationMessage = `🚨 **监控通知**\n`;
+        notificationMessage += `⏰ 时间: ${timestamp}\n`;
+        notificationMessage += `📢 频道: ${message.channel.name}\n`;
+        notificationMessage += `👤 用户: ${message.author.username} (${message.author.id})\n`;
+        notificationMessage += `💬 消息: ${message.content}\n`;
+        
+        if (message.attachments.size > 0) {
+            notificationMessage += `📎 附件: ${Array.from(message.attachments.values()).map(att => att.url).join(', ')}\n`;
+        }
+        
+        notificationMessage += `🔗 跳转: https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
+        
+        await user.send(notificationMessage);
+        console.log(`✅ 已发送通知给用户 ${user.username}`);
+    } catch (error) {
+        console.error(`❌ 发送通知失败:`, error.message);
+    }
+}
+
 client.once(Events.ClientReady, () => {
     console.log(`✅ Discord机器人已启动！登录为 ${client.user.tag}`);
 });
@@ -44,6 +67,12 @@ client.on(Events.MessageCreate, message => {
         
         if (message.attachments.size > 0) {
             console.log(`📎 附件: ${Array.from(message.attachments.values()).map(att => att.url).join(', ')}`);
+        }
+        
+        // Send DM notification if configured
+        const notifyUserId = process.env.NOTIFY_USER_ID;
+        if (notifyUserId) {
+            sendNotification(notifyUserId, message, timestamp);
         }
     }
     
